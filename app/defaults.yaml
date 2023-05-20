@@ -1,0 +1,4 @@
+url: https://20.85.237.99/api/data/signed
+client_cert_path: app/ssl/certs/client.crt
+client_key_path: app/ssl/private/client.key
+ca_cert_path: app/ssl/certs/ca.crt
