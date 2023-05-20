@@ -29,3 +29,7 @@ def load_schedule_or_create_blank():
         logger.info("Created Schedule Object")
     except:
         logger.error("Unable to Create Schedule Object")
+
+@app.get("/")
+def index():
+    return "Hello!"
