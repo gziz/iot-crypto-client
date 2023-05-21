@@ -6,6 +6,10 @@ services:
             - .env
         ports:
             - 8000:8000
+        depends_on:
+            - postgres
+        volumes:
+            - ./app:/client/app:ro
     
     postgres:
         image: postgres
