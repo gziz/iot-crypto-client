@@ -6,3 +6,13 @@ services:
             - .env
         ports:
             - 8000:8000
+    
+postgres:
+    image: postgres
+    env_file:
+        - db.env
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+
+volumes:
+	postgres-db:
