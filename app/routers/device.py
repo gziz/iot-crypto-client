@@ -49,7 +49,7 @@ async def update_value(req: schemas.KeyValue, db: Session = Depends(get_db)):
 @router.get('/init-db')
 def init_db(db: Session = Depends(get_db)):
     if not db.query(models.KeyValue).first():
-        with open('app/defaults.yaml', 'r') as f:
+        with open('defaults.yaml', 'r') as f:
             defaults = yaml.safe_load(f)
 
         defaults = [models.KeyValue(key=key, value=value) for key, value in defaults.items()]
