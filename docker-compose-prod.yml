@@ -1,7 +1,7 @@
 version: "3"
 services:
     api:
-        build: .
+        image: gziz/fastapi:latest
         env_file:
             - .env
         ports:
