@@ -15,14 +15,11 @@ def get_variables():
     # Get private key
     d, _ = get_keys_from_cert(key_values["client_key_path"])
     key_values["d"] = d
-
-    key_values["client_path"] = (key_values["client_cert_path"],
-                                key_values["client_key_path"])
     
     return schemas.Variables(**key_values)
 
 
-def add_data_manual(req: schemas.SensorData):
+def send_data_manual(req: schemas.SensorData):
     ec = ECDSA()
     key_values = get_variables()
 
@@ -44,25 +41,28 @@ def add_data_manual(req: schemas.SensorData):
 
 
 
-# def read_data():
-#     pass
+def read_send_data():
+    db = database.SessionLocal()
+    record = db.query(models.SensorData).filter(models.SensorData.sent != 1).first()
 
-# def add_data():
-#     ec = ECDSA()
-#     key_values = get_variables()
+    message = json.dumps(record.to_dict())
 
-#     # Turn schema SensorData into a json str object
-#     #message = 
-#     r, s = ec.sign(message, key_values.d)
+    ec = ECDSA()
+    key_values = get_variables()
 
-#     data = {"message": message, "r": r, "s": s}
+    # Turn schema SensorData into a json str object
+    r, s = ec.sign(message, key_values.d)
 
-#     api_res = requests.post(url=key_values.url,
-#                             data=json.dumps(data),
-#                             cert=key_values.client_path,
-#                             verify=key_values.ca_cert_path)
+    data = {"message": message, "r": r, "s": s}
 
-#     response = {"message": message,
-#                  "apiResponse": api_res.json()}
+    api_res = requests.post(url=key_values.url,
+                            data=json.dumps(data),
+                            cert=(key_values.client_cert_path,
+                                   key_values.client_key_path),
+                            verify=key_values.ca_cert_path)
     
-#     return response
+    record.sent = 1
+    db.commit()
+    db.close()
+
+    return api_res.json()

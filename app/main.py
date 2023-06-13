@@ -1,10 +1,11 @@
 import logging
 from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
+from dotenv import load_dotenv
+load_dotenv()
 
 from . import models, database, schemas
-from .database import get_db
+from .repository.data import read_send_data
 from .routers import data, device
 
 app = FastAPI()
@@ -22,8 +23,7 @@ def load_schedule_or_create_blank():
     try:
         scheduler = BackgroundScheduler()
 
-        schema = schemas.SensorData()
-        scheduler.add_job(data.add_data_manual, 'cron', minute='*/5', id="000", replace_existing=True, args=[schema])
+        scheduler.add_job(read_send_data, 'cron', minute='*/15', id="000", replace_existing=True)
 
         scheduler.start()
         logger.info("Created Schedule Object")

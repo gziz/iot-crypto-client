@@ -9,14 +9,15 @@ class KeyValue(BaseModel):
 
 
 class SensorData(BaseModel):
-    created: Optional[str]
-    value : float = 10.0
-    type_ : str = "Temperature"
+    date_time: Optional[str]
+    value : float
+    type_ : str
     sensor_id : int = 1
 
 
 class Variables(BaseModel):
     url: str
-    client_path: Tuple[str, str]
+    client_key_path: str
+    client_cert_path: str
     d: int
     ca_cert_path: str

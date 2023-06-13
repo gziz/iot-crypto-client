@@ -9,5 +9,9 @@ from .. import schemas, database, models
 router = APIRouter(prefix = "/data", tags = ["Sensor Data"])
 
 @router.post("/manual")
-def add_data_manual(req: schemas.SensorData):
-    return data.add_data_manual(req)
+def send_data_manual(req: schemas.SensorData):
+    return data.send_data_manual(req)
+
+@router.post("/auto")
+def send_data_auto():
+    return data.read_send_data()
